@@ -1,0 +1,18 @@
+version: "3.3"
+
+networks:
+  torrentNet:
+    driver: bridge
+    attachable: false
+  dockerNet:
+    driver: bridge
+    attachable: false
+
+volumes:
+  dlVolume:
+    external: false
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/6tb_hdd/torrents

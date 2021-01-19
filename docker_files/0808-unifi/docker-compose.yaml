@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  portainer:
+    image: jacobalberty/unifi:stable-6
+    container_name: unifi
+    restart: unless-stopped
+    privileged: true
+#    ports:
+#      - "9108:8080"
+    networks:
+      - dockerNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/dockerVolume/portainer/data:/data
+      - /var/docks/unifi:/unifi
+
+networks:
+  dockerNet:
+    external: true

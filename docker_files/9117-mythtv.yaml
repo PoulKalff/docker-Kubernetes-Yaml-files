@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mythbackend:
+    image: sammonsjl/mythtv:29-fixes
+    container_name: mythtv
+    restart: unless-stopped
+    ports:
+       - "9117:80"
+    volumes:
+      - /home/dockerVolume/mythtv/config:/home/mythtv:nocopy
+      - /home/dockerVolume/mythtv/data:/var/lib/mysql:nocopy
+      - /home/dockerVolume/mythtv/media:/var/lib/mythtv:nocopy
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+      - CONFIG_MODE=1
+    hostname: mythbackend
+    network_mode: "host"
+
+
+
+# https://hub.docker.com/r/sammonsjl/mythtv/

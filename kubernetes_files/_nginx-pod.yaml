@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pv-pod
+spec:
+  initContainers:
+  - name: bootstrap-container
+    image: ubuntu:latest
+    command: ["/bin/sh","-c"]
+    args: ["apt update; apt install nfs-common -y"]
+    volumeMounts:
+      - mountPath: "/usr/share/nginx/html"
+        name: nginx-pv-storage
+  volumes:
+    - name: nginx-pv-storage
+      persistentVolumeClaim:
+        claimName: test-nginx-persistent-volumes-claim
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "nginx-server"

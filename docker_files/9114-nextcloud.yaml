@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+
+  nextcloud:
+    image: wonderfall/nextcloud:daily
+    container_name: nextcloud
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - UID=1000
+      - GID=1000
+      - TZ=Europe/Copenhagen
+      - UPLOAD_MAX_SIZE=2G
+      - APC_SHM_SIZE=128M
+      - OPCACHE_MEM_SIZE=128
+      - CRON_PERIOD=15m
+      - TZ=Europe/Bucharest
+      - ADMIN_USER=            # Don't set to configure through browser
+      - ADMIN_PASSWORD=        # Don't set to configure through browser
+      - DOMAIN=
+      - DB_TYPE=mysql
+      - DB_NAME=nextcloud
+      - DB_USER=nextcloud
+      - DB_PASSWORD=
+      - DB_HOST=127.0.0.1
+    volumes:
+      - /opt/cloud:/data
+      - /opt/config/nextcloud/config:/config
+      - /opt/config/nextcloud/apps:/apps2
+      - /opt/config/nextcloud/themes:/nextcloud/themes

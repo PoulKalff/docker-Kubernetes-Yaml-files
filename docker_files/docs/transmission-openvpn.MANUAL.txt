@@ -1,0 +1,22 @@
+sudo docker run \
+        --name transmission-openvpn \
+        --restart=unless-stopped \
+        --privileged \
+        -v /home/dockerVolume/transmission/config:/config \
+        -v /home/dockerVolume/transmission/data:/data \
+        -v /mnt/6tb_hdd/torrents/completed:/downloads \
+        -e "OPENVPN_PROVIDER=PIA" \
+        -e "OPENVPN_USERNAME=p4559553" \
+        -e "OPENVPN_PASSWORD=xQcQsWC5Fm" \
+        -e "OPENVPN_CONFIG=Netherlands" \
+        -e "OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60" \
+        -e "TRANSMISSION_UMASK=0000" \
+        -e "TRANSMISSION_WEB_UI=transmission-web-control" \
+        -e "TRANSMISSION_INCOMPLETE_DIR_ENABLED=false" \
+        -e "TRANSMISSION_DOWNLOAD_DIR=/downloads" \
+        -e "LOCAL_NETWORK=192.168.1.0/24" \
+        -p 9091:9091 \
+        -d \
+        --dns 8.8.8.8 \
+        --dns 8.8.4.4 \
+        haugene/transmission-openvpn:latest

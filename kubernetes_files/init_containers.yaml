@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sdc-ipxe-deployment
+  labels:
+    app: sdc-ipxe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sdc-ipxe
+  template:
+    metadata:
+      labels:
+        app: sdc-ipxe
+    spec:
+      initContainers:
+      - name: config-data
+        image: ubuntu:xenial
+        command: ["/bin/sh","-c"]
+        args: ["apt update; apt install nfs-common -y"]
+      volumes:
+      - name: sdc-data
+        hostPath:
+          path: /mnt/kube-data/sdc-ipxe/
+          type: DirectoryOrCreate
+      containers:
+      - name: sdc-ipxe
+        image: ubuntu:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /usr/local
+          name: sdc-data

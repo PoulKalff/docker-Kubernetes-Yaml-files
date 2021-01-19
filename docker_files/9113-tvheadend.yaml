@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+
+  tvheadend:
+    image: linuxserver/tvheadend:latest
+    container_name: tvheadend
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 9113:9981
+      - 9982:9982
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+      - LOCAL_NETWORK=192.168.1.0/24
+    volumes:
+      - /home/dockerVolume/tvheadend/config:/config
+      - /mnt/6tb_hdd/recordings:/data
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/dvb:/dev/dvb

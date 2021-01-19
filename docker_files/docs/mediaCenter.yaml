@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9102:7878"
+    networks:
+      - majestcDockerNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /home/dockerVolume/radarr/config:/config
+      - /mnt/6tb_hdd/multiMedia/movies/new:/movies
+      - /mnt/6tb_hdd/torrents:/downloads
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9103:8989"
+    networks:
+      - majestcDockerNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /tmp:/tv
+      - /home/dockerVolume/sonarr/config:/config
+      - /mnt/6tb_hdd/multiMedia/series/collection:/series
+      - /mnt/6tb_hdd/torrents:/downloads
+
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - majestcDockerNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /home/dockerVolume/jackett/config:/config
+      - /tmp:/downloads
+    ports:
+      - "9104:9117"
+
+networks:
+  majestcDockerNet:
+    driver: bridge

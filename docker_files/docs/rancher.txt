@@ -1,0 +1,9 @@
+sudo docker run \
+        --name rancher \
+        --restart=unless-stopped \
+        -v /tmp:/var/lib/mysql \
+        -v /tmp:/var/log/mysql \
+        -v /tmp:/var/lib/cattle \
+        -d \
+        -p 9005:8080 \
+        rancher/server:latest

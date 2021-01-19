@@ -1,0 +1,7 @@
+Version 2:
+--------------
+sudo docker-compose -f torrent_factory.yml up -d
+
+Version 3:
+--------------
+sudo docker stack deploy -c /mnt/6tb_hdd/docker-compose/torrent_factory.yml factory

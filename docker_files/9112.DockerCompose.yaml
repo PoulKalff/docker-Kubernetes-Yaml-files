@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+
+  docker-compose-ui:
+    image: francescou/docker-compose-ui:latest
+    container_name: docker-compose-ui
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9112:5000"
+    volumes:
+      - /home/dockerVolume/docker-compose-ui:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/6tb_hdd/docker-compose:/opt/docker-compose-projects

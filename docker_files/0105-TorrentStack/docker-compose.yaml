@@ -1,0 +1,126 @@
+version: "3.7"
+
+services:
+
+  transmission_openvpn:
+    image: haugene/transmission-openvpn:latest
+    container_name: transmission_openvpn
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9101:9091"
+    networks:
+      - tsNet
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_USERNAME=p4559553
+      - OPENVPN_PASSWORD=xQcQsWC5Fm
+      - OPENVPN_CONFIG=france
+      - OPENVPN_OPTS=--inactive 3600 --ping 10 --ping-exit 60
+      - TRANSMISSION_UMASK=2
+      - TRANSMISSION_WEB_UI=transmission-web-control
+      - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
+      - TRANSMISSION_DOWNLOAD_DIR=/downloads
+      - LOCAL_NETWORK=192.168.1.0/24
+    volumes:
+      - /home/dockerVolume/transmission/config:/config
+      - /home/dockerVolume/transmission/data:/data
+      - dlVolume:/downloads
+
+
+  radarr:
+    container_name: radarr
+    build: .
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9102:7878"
+    networks:
+      - tsNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /home/dockerVolume/radarr/config:/config
+      - /mnt/6tb_hdd/multiMedia/movies/collection:/movies
+      - dlVolume:/downloads
+
+  sonarr:
+    image: linuxserver/sonarr:preview
+    container_name: sonarr
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9103:8989"
+    networks:
+      - tsNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /tmp:/tv
+      - /home/dockerVolume/sonarr/config:/config
+      - /mnt/6tb_hdd/multiMedia/series/collection:/series
+      - dlVolume:/downloads
+
+
+  lidarr:
+    image: linuxserver/lidarr:nightly
+    container_name: lidarr
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9104:8686"
+    networks:
+      - tsNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /home/dockerVolume/lidarr/config:/config
+      - /mnt/6tb_hdd/multiMedia/audio/music:/music
+      - dlVolume:/downloads
+
+
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "9105:9117"
+    networks:
+      - tsNet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Copenhagen
+    volumes:
+      - /home/dockerVolume/jackett/config:/config
+      - /tmp:/downloads
+
+
+networks:
+  tsNet:
+    driver: bridge
+    attachable: false
+    name: torrentStackNet
+
+volumes:
+  dlVolume:
+    external: false
+    name: downloadVolume
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/3tb_hdd/torrents
